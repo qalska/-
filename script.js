@@ -44,24 +44,47 @@ const onSolveQuadratic = () => {
 }
 
 // Работа с Local Storage
-const form = document.querySelector('#form');
-const elements = form.elements;
 
-const changeForm = (element) => {
-    let name = element.getAttribute('id');
-    let value = element.value;
-    localStorage.setItem(name, value);
-}
+// Сохраняли данные a, b, c в разные поля Local Storage
+// const form = document.querySelector('#form');
+// const elements = form.elements;
 
-const onDataStorage = () => {
-    for (i=0; i < elements.length; i++) {
-        changeForm(elements[i])
+// const changeForm = (element) => {
+//     let name = element.getAttribute('id');
+//     let value = element.value;
+//     localStorage.setItem(name, value);
+// }
+
+// const onDataStorage = () => {
+//     for (i=0; i < elements.length; i++) {
+//         changeForm(elements[i])
+//     }
+// }
+
+// const checkStorage = () => {
+//     for (i=0; i < elements.length; i++) {
+//         elements[i].value = localStorage.getItem(elements[i].getAttribute('id'))
+//     }
+// }
+
+const onSaveInStorage = () => {
+    const data = {
+        'a': document.querySelector('#a-id').value,
+        'b': document.querySelector('#b-id').value,
+        'c': document.querySelector('#c-id').value
     }
+    localStorage.setItem('data', JSON.stringify(data));
 }
 
-const checkStorage = () => {
-    for (i=0; i < elements.length; i++) {
-        elements[i].value = localStorage.getItem(elements[i].getAttribute('id'))
+const enterDataIntoInput = () => {
+    const form = document.querySelector('#form');
+    const elements = form.elements;
+    const savedData = localStorage.getItem('data');
+    const savedRoots = JSON.parse(savedData);
+
+    let rootKeys = Object.keys(savedRoots);
+    for (i=0; i < rootKeys.length; i++) {
+        document.querySelector(`#${rootKeys[i]}-id`).value = savedRoots[rootKeys[i]]
     }
 }
 
@@ -85,7 +108,7 @@ const onClearBtn = () => {
 // Функция инициализации событий
 const initEvents = () => {
     document.querySelector('#btn-ready').onclick = onSolveQuadratic;
-    document.querySelector('#btn-save').onclick = onDataStorage;
+    document.querySelector('#btn-save').onclick = onSaveInStorage;
     document.querySelector('#btn-clear').onclick = onClearBtn;
 
 }
@@ -94,15 +117,15 @@ const toggleErrors = (errorText, show = true, rootInputText) => {
     let errorBlock = document.querySelector('#errors');
     errorBlock.innerHTML = errorText;
     errorBlock.style.display = show ? 'block' : 'none';
-    let x1Block = document.querySelector('#x1-id');
-    let x2Block = document.querySelector('#x2-id');
-    x1Block.value = rootInputText;
-    x2Block.value = rootInputText;
+    let x1Input = document.querySelector('#x1-id');
+    let x2Input = document.querySelector('#x2-id');
+    x1Input.value = rootInputText;
+    x2Input.value = rootInputText;
 }
 
 // Основная функция инициализации всего
 const init = () => {
-    checkStorage();
+    enterDataIntoInput();
     toggleErrors('', false, '');
     initEvents();
 }
