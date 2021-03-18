@@ -23,7 +23,7 @@ const onSolveQuadratic = () => {
     const {x1 , x2, D} = solveQuadratic(a, b, c);
 
     if (D < 0) {
-        toggleErrors('D < 0!');
+        toggleErrors('D < 0!', true, '');
         return false;
     }
 
@@ -32,7 +32,7 @@ const onSolveQuadratic = () => {
     }
 
     if (x1 === null && x2 === null) {
-        toggleErrors('Нет корней!');
+        toggleErrors('Нет корней!', true, '');
     }
 
     if ((x1 === null && x2 !== null) || (x1 !== null && x2 === null)) {
@@ -90,17 +90,20 @@ const initEvents = () => {
 
 }
 
-const toggleErrors = (errorText, show = true) => {
+const toggleErrors = (errorText, show = true, rootInputText) => {
     let errorBlock = document.querySelector('#errors');
     errorBlock.innerHTML = errorText;
     errorBlock.style.display = show ? 'block' : 'none';
-    
+    let x1Block = document.querySelector('#x1-id');
+    let x2Block = document.querySelector('#x2-id');
+    x1Block.value = rootInputText;
+    x2Block.value = rootInputText;
 }
 
 // Основная функция инициализации всего
 const init = () => {
     checkStorage();
-    toggleErrors('', false);
+    toggleErrors('', false, '');
     initEvents();
 }
 init()
